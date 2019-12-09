@@ -57,7 +57,7 @@ func main() {
 	err = agent.ServiceRegister(&registration)
 
 	http.HandleFunc("/healthcheck", homeRouterHandler)       // установим роутер
-	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil) // задаем слушать порт
+	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil) // задаем  слушать порт
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
