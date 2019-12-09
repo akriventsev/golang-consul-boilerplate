@@ -31,7 +31,7 @@ func main() {
 		ID:   fmt.Sprintf("id-%s-%d", name, port),
 		Name: fmt.Sprintf("service-%s", name),
 		Tags: []string{"tag4", "tag6"},
-		Meta: map[string]string{"karamba": "first", "Jomolungma": "Gora", "babara": "boom"},
+		Meta: map[string]string{"karamba": "first"},
 	}
 
 	address := hostname()
@@ -56,30 +56,13 @@ func main() {
 
 	err = agent.ServiceRegister(&registration)
 
-	// Get a handle to the KV API
-	kv := client.KV()
-
-	// PUT a new KV pair
-	p := &api.KVPair{Key: "REDIS_MAXCLIENTS", Value: []byte("10000")}
-	_, err = kv.Put(p, nil)
-	if err != nil {
-		panic(err)
-	}
-
-	// Lookup the pair
-	pair, _, err := kv.Get("REDIS_MAXCLIENTS", nil)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("KV: %v %s\n", pair.Key, pair.Value)
-
-	http.HandleFunc("/healthcheck", HomeRouterHandler)       // установим роутер
+	http.HandleFunc("/healthcheck", homeRouterHandler)       // установим роутер
 	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil) // задаем слушать порт
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
-func HomeRouterHandler(w http.ResponseWriter, r *http.Request) {
+func homeRouterHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello Consul!") // отправляем данные на клиентскую сторону
 }

@@ -2,7 +2,6 @@ version: '3'
 
 services:
   service-fvd-1:
-    #image: fwconsul
     # ports:
     #   - "4456:4456"
     build: .
@@ -14,7 +13,6 @@ services:
       - CONSUL_SERVER_ADDRESS=consul-server-1:8500
       - SERVICE_NAME=fvd-1
   service-fvd-2:
-    #image: fwconsul
     # ports:
     #   - "4457:4456"
     build: .
