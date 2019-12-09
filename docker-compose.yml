@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  service-fvd-1:
+    #image: fwconsul
+    # ports:
+    #   - "4456:4456"
+    build: .
+    networks:
+      - consul-demo
+    depends_on:
+      - consul-server-bootstrap
+    environment:
+      - CONSUL_SERVER_ADDRESS=consul-server-1:8500
+      - SERVICE_NAME=fvd-1
+  service-fvd-2:
+    #image: fwconsul
+    # ports:
+    #   - "4457:4456"
+    build: .
+    networks:
+      - consul-demo
+    depends_on:
+      - consul-server-bootstrap
+    environment:
+      - CONSUL_SERVER_ADDRESS=consul-server-1:8500
+      - SERVICE_NAME=fvd-2
+      #- SERVICE_PORT=4457
+  consul-agent-1: &consul-agent
+    image: consul:latest
+    networks:
+      - consul-demo
+    command: "agent -retry-join consul-server-bootstrap -client 0.0.0.0"
+
+  consul-agent-2:
+    <<: *consul-agent
+
+  consul-agent-3:
+    <<: *consul-agent
+
+  consul-server-1: &consul-server
+    <<: *consul-agent
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
+
+  consul-server-2:
+    <<: *consul-server
+
+  consul-server-bootstrap:
+    <<: *consul-agent
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect 3 -ui -client 0.0.0.0"
+
+networks:
+  consul-demo:
