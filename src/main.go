@@ -46,7 +46,7 @@ func main() {
 	config := api.DefaultConfig()
 	config.Address = os.Getenv("CONSUL_SERVER_ADDRESS")
 	log.Printf("config: %s\n", config.Address)
-	// Get a new client
+	// Get a new Consul client
 	client, err := api.NewClient(config)
 	if err != nil {
 		panic(err)
